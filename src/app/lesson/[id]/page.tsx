@@ -6,12 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { sendMessage } from "@/app/actions/chat";
 import ThreeAvatar from "@/components/ThreeAvatar";
 
-const CONTRIBUTORS = [
-  { username: "saksham-2x7", url: "https://github.com/saksham-2x7" },
-  { username: "Kaustubh-Negi-01", url: "https://github.com/Kaustubh-Negi-01" },
-  { username: "AsteroidHH", url: "https://github.com/AsteroidHH" },
-];
-
 export default function LessonPage({ params }: { params: { id: string } }) {
   const [messages, setMessages] = useState<{ role: 'ai' | 'user', text: string }[]>([
     { role: 'ai', text: "Hello! I'm your AI Teacher. Are you ready to begin our lesson?" }
@@ -148,31 +142,6 @@ export default function LessonPage({ params }: { params: { id: string } }) {
             </motion.div>
           </div>
 
-          {/* Contributors Footer */}
-          <div className="absolute bottom-4 left-8 z-20 flex items-center gap-3">
-            <span className="text-xs text-zinc-600 uppercase tracking-widest">Built by</span>
-            <div className="flex -space-x-2">
-              {CONTRIBUTORS.map((c) => (
-                <a
-                  key={c.username}
-                  href={c.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title={c.username}
-                  className="group relative"
-                >
-                  <img
-                    src={`https://github.com/${c.username}.png?size=40`}
-                    alt={c.username}
-                    className="w-8 h-8 rounded-full border-2 border-[#030303] transition-transform group-hover:-translate-y-1"
-                  />
-                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 text-xs bg-black/80 text-white px-2 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-                    @{c.username}
-                  </span>
-                </a>
-              ))}
-            </div>
-          </div>
         </div>
 
         {/* Side Panel */}

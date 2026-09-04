@@ -10,7 +10,7 @@ export async function sendMessage(message: string, context: string) {
 
     if (apiKey && apiKey !== 'your_venice_api_key_here') {
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+      const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
       const prompt = `You are a helpful, human-like AI teacher. Evaluate the student's answer for misconceptions based on this context: "${context}". 
       Keep your response concise, conversational, and encouraging (1-3 sentences maximum). Make it sound natural to be spoken aloud.

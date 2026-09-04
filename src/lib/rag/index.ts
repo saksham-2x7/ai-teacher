@@ -27,7 +27,8 @@ export async function processDocument(buffer: Buffer, type: string) {
   let text = '';
 
   if (type === 'application/pdf') {
-    const pdfParse = (await import('pdf-parse')).default;
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const pdfParse = require('pdf-parse');
     const data = await pdfParse(buffer);
     text = data.text;
   } else {

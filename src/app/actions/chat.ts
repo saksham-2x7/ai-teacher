@@ -23,14 +23,32 @@ export async function sendMessage(message: string, context: string) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 
-    // Generate Audio URLs using google-tts-api for long text
-    const audioResults = googleTTS.getAllAudioUrls(text, {
-      lang: 'en-US',
-      slow: false,
-      host: 'https://translate.google.com',
-    });
+    // Chunk the text into sentences to respect 200 char limits per TTS request
+    const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+    
+    // Fallback if a single sentence is still somehow > 200 chars (extremely rare)
+    const chunks: string[] = [];
+    for (const sentence of sentences) {
+      if (sentence.length <= 190) {
+        chunks.push(sentence.trim());
+      } else {
+        const words = sentence.split(' ');
+        let currentChunk = "";
+        for (const word of words) {
+          if (currentChunk.length + word.length < 190) {
+            currentChunk += (currentChunk ? " " : "") + word;
+          } else {
+            chunks.push(currentChunk.trim());
+            currentChunk = word;
+          }
+        }
+        if (currentChunk) chunks.push(currentChunk.trim());
+      }
+    }
 
-    const audioUrls = audioResults.map(r => r.url);
+    const audioUrls = chunks.filter(c => c.length > 0).map(chunk => 
+      `/api/tts?text=${encodeURIComponent(chunk)}`
+    );
 
     return {
       text,

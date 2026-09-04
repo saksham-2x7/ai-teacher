@@ -71,10 +71,10 @@ export default function LessonPage({ params }: { params: { id: string } }) {
   const handleSend = async () => {
     if (!input.trim()) return;
     
-    // Unlock Audio Context immediately on user click (fixes Safari NotAllowedError)
+    // Unlock Audio Context immediately on user click using a valid MP3 file
     if (audioPlayer) {
-      audioPlayer.src = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA";
-      audioPlayer.play().catch(() => {});
+      audioPlayer.src = "/silence.mp3";
+      audioPlayer.play().catch(e => console.error("Unlock play failed", e));
     }
 
     const userMsg = input;

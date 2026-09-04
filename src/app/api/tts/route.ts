@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server';
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const googleTTS = require('google-tts-api');
 
 export async function GET(req: Request) {
   try {
@@ -9,21 +11,16 @@ export async function GET(req: Request) {
       return new NextResponse("Missing text", { status: 400 });
     }
 
-    const googleTtsUrl = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=en-US&total=1&idx=0&textlen=${text.length}&client=tw-ob`;
-    
-    const response = await fetch(googleTtsUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-      }
+    const base64Audio = await googleTTS.getAudioBase64(text, {
+      lang: 'en',
+      slow: false,
+      host: 'https://translate.google.com',
+      timeout: 10000,
     });
 
-    if (!response.ok) {
-      throw new Error(`Google TTS failed: ${response.statusText}`);
-    }
+    const buffer = Buffer.from(base64Audio, 'base64');
 
-    const audioBuffer = await response.arrayBuffer();
-
-    return new NextResponse(audioBuffer, {
+    return new NextResponse(buffer, {
       headers: {
         'Content-Type': 'audio/mpeg',
         'Cache-Control': 'public, max-age=31536000',

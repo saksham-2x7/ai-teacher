@@ -19,7 +19,9 @@ export default function LessonPage({ params }: { params: { id: string } }) {
   const [loading, setLoading] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  
+  // Single Audio instance created once to bypass Safari Autoplay restrictions
+  const [audioPlayer] = useState(() => typeof window !== 'undefined' ? new Audio() : null);
   const audioQueueRef = useRef<string[]>([]);
 
   useEffect(() => {
@@ -27,41 +29,40 @@ export default function LessonPage({ params }: { params: { id: string } }) {
   }, [messages]);
 
   const playNextAudio = () => {
+    if (!audioPlayer) return;
     if (audioQueueRef.current.length === 0) {
       setIsSpeaking(false);
       return;
     }
-    const nextUrl = audioQueueRef.current.shift()!;
-    const audio = new Audio(nextUrl);
-    audioRef.current = audio;
     
-    audio.onplay = () => setIsSpeaking(true);
-    audio.onended = () => {
-      playNextAudio();
+    const nextUrl = audioQueueRef.current.shift()!;
+    audioPlayer.src = nextUrl;
+    
+    audioPlayer.onplay = () => setIsSpeaking(true);
+    audioPlayer.onended = () => {
+      playNextAudio(); // Recursive call for next chunk
     };
-    audio.onerror = () => {
+    audioPlayer.onerror = () => {
       setIsSpeaking(false);
       audioQueueRef.current = [];
     };
     
-    audio.play().catch(e => {
-      console.error("Audio blocked:", e);
+    audioPlayer.play().catch(e => {
+      console.error("Audio blocked by Safari:", e);
       setIsSpeaking(false);
     });
   };
 
   const playAudio = (urls: string[]) => {
-    if (audioRef.current) audioRef.current.pause();
-    
-    if (!urls || urls.length === 0) return;
+    if (!urls || urls.length === 0 || !audioPlayer) return;
     
     audioQueueRef.current = [...urls];
     playNextAudio();
   };
 
   const stopAudio = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
+    if (audioPlayer) {
+      audioPlayer.pause();
       setIsSpeaking(false);
       audioQueueRef.current = [];
     }
@@ -69,6 +70,13 @@ export default function LessonPage({ params }: { params: { id: string } }) {
 
   const handleSend = async () => {
     if (!input.trim()) return;
+    
+    // Unlock Audio Context immediately on user click (fixes Safari NotAllowedError)
+    if (audioPlayer) {
+      audioPlayer.src = "data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA";
+      audioPlayer.play().catch(() => {});
+    }
+
     const userMsg = input;
     setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
     setInput("");

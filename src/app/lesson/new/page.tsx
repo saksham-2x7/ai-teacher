@@ -1,17 +1,17 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { UploadCloud, Loader2 } from "lucide-react";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { UploadCloud, Loader2 } from 'lucide-react';
 
 export default function NewLessonPage() {
   const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
-  const [topic, setTopic] = useState("");
+  const [topic, setTopic] = useState('');
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -24,15 +24,15 @@ export default function NewLessonPage() {
       if (file) {
         // Handle File Upload
         const formData = new FormData();
-        formData.append("file", file);
-        formData.append("title", file.name);
+        formData.append('file', file);
+        formData.append('title', file.name);
 
-        const res = await fetch("/api/upload", {
-          method: "POST",
+        const res = await fetch('/api/upload', {
+          method: 'POST',
           body: formData,
         });
         const data = await res.json();
-        
+
         if (data.success) {
           router.push(`/lesson/demo`); // Redirecting to demo for MVP
         }
@@ -56,14 +56,14 @@ export default function NewLessonPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2 border-2 border-dashed border-zinc-800 rounded-lg p-12 text-center hover:bg-zinc-900/50 transition-colors cursor-pointer relative">
-              <input 
-                type="file" 
+            <div className="relative cursor-pointer space-y-2 rounded-lg border-2 border-dashed border-zinc-800 p-12 text-center transition-colors hover:bg-zinc-900/50">
+              <input
+                type="file"
                 accept=".pdf,.txt"
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                 onChange={(e) => setFile(e.target.files?.[0] || null)}
               />
-              <UploadCloud className="w-10 h-10 mx-auto text-zinc-500 mb-4" />
+              <UploadCloud className="mx-auto mb-4 h-10 w-10 text-zinc-500" />
               {file ? (
                 <p className="text-sm font-medium text-blue-500">{file.name}</p>
               ) : (
@@ -85,17 +85,17 @@ export default function NewLessonPage() {
 
             <div className="space-y-2">
               <Label htmlFor="topic">Topic</Label>
-              <Input 
-                id="topic" 
-                placeholder="e.g. Advanced Quantum Mechanics" 
+              <Input
+                id="topic"
+                placeholder="e.g. Advanced Quantum Mechanics"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
               />
             </div>
 
             <Button type="submit" className="w-full" disabled={loading || (!file && !topic)}>
-              {loading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-              {loading ? "Generating Lesson..." : "Start Learning"}
+              {loading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
+              {loading ? 'Generating Lesson...' : 'Start Learning'}
             </Button>
           </form>
         </CardContent>

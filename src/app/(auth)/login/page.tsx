@@ -17,15 +17,19 @@ export default function LoginPage() {
         <CardContent className="space-y-4">
           <form
             action={async () => {
-              "use server";
-              await signIn("credentials", { 
-                username: "demo", 
-                password: "demo", 
-                redirectTo: "/dashboard" 
+              'use server';
+              await signIn('credentials', {
+                username: 'demo',
+                password: 'demo',
+                redirectTo: '/dashboard',
               });
             }}
           >
-            <Button variant="default" className="w-full bg-blue-600 hover:bg-blue-700 text-white" type="submit">
+            <Button
+              variant="default"
+              className="w-full bg-blue-600 text-white hover:bg-blue-700"
+              type="submit"
+            >
               One-Click Demo Login
             </Button>
           </form>

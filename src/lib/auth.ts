@@ -14,18 +14,18 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
     Credentials({
-      name: "Demo Login",
+      name: 'Demo Login',
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "demo" },
-        password: { label: "Password", type: "password", placeholder: "demo" }
+        username: { label: 'Username', type: 'text', placeholder: 'demo' },
+        password: { label: 'Password', type: 'password', placeholder: 'demo' },
       },
       async authorize(credentials) {
         // Mock authorization for local development
-        if (credentials?.username === "demo" && credentials?.password === "demo") {
-          return { id: "1", name: "Demo Student", email: "student@demo.com" };
+        if (credentials?.username === 'demo' && credentials?.password === 'demo') {
+          return { id: '1', name: 'Demo Student', email: 'student@demo.com' };
         }
         return null;
-      }
-    })
+      },
+    }),
   ],
 });

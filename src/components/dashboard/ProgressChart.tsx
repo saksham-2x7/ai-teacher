@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   LineChart,
@@ -11,9 +11,7 @@ import {
 } from 'recharts';
 
 export function ProgressChart({ data }: { data: any[] }) {
-  const chartData = data.length > 0 ? data : [
-    { name: 'No Data', score: 0 }
-  ];
+  const chartData = data.length > 0 ? data : [{ name: 'No Data', score: 0 }];
 
   return (
     <div className="mt-4 h-[300px] w-full">

@@ -5,14 +5,15 @@ import { pipeline, env } from '@huggingface/transformers';
 env.allowLocalModels = false;
 env.useBrowserCache = false;
 
-let extractor: any = null;
+let extractor: unknown = null;
 
 // Singleton to avoid reloading the model
 async function getExtractor() {
   if (!extractor) {
     extractor = await pipeline('feature-extraction', 'Supabase/gte-small');
   }
-  return extractor;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return extractor as any;
 }
 
 // Generate embeddings using open-source HuggingFace model (gte-small)
@@ -26,7 +27,7 @@ export async function processDocument(buffer: Buffer, type: string) {
   let text = '';
 
   if (type === 'application/pdf') {
-    const pdfParse = require('pdf-parse');
+    const pdfParse = (await import('pdf-parse')).default;
     const data = await pdfParse(buffer);
     text = data.text;
   } else {

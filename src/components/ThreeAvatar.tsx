@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Sphere, MeshDistortMaterial, Trail, Float, Stars } from '@react-three/drei';
+import { Sphere, MeshDistortMaterial, Float, Stars } from '@react-three/drei';
 import * as THREE from 'three';
 
 function AvatarCore({ isSpeaking }: { isSpeaking: boolean }) {

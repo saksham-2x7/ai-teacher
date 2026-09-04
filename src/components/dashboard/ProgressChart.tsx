@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
-export function ProgressChart({ data }: { data: any[] }) {
+export function ProgressChart({ data }: { data: { name: string; score: number }[] }) {
   const chartData = data.length > 0 ? data : [{ name: 'No Data', score: 0 }];
 
   return (

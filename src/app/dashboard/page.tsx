@@ -46,7 +46,7 @@ export default async function DashboardPage() {
           <h2 className="bg-gradient-to-r from-white to-white/60 bg-clip-text text-4xl font-bold tracking-tight text-transparent">
             Dashboard
           </h2>
-          <p className="mt-2 text-zinc-400">Welcome back. Here's your learning progress.</p>
+          <p className="mt-2 text-zinc-400">Welcome back. Here&apos;s your learning progress.</p>
         </div>
         <div className="flex items-center space-x-2">
           <Link href="/lesson/new">
@@ -127,7 +127,7 @@ export default async function DashboardPage() {
                 </div>
                 <div className="flex-1 space-y-1">
                   <p className="text-sm leading-none font-medium text-white transition-colors group-hover:text-blue-400">
-                    Review: Newton's Laws
+                    Review: Newton&apos;s Laws
                   </p>
                   <p className="text-sm text-zinc-500">Physics • Needs Improvement</p>
                 </div>

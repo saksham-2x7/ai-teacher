@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { sendMessage } from "@/app/actions/chat";
 import ThreeAvatar from "@/components/ThreeAvatar";
 
-export default function LessonPage({ params }: { params: { id: string } }) {
+export default function LessonPage() {
   const [messages, setMessages] = useState<{ role: 'ai' | 'user', text: string }[]>([
     { role: 'ai', text: "Hello! I'm your AI Teacher. Are you ready to begin our lesson?" }
   ]);

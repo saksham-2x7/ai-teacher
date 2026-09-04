@@ -1,7 +1,7 @@
 'use server';
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import * as googleTTS from 'google-tts-api';
+
 
 export async function sendMessage(message: string, context: string) {
   try {
@@ -54,8 +54,9 @@ export async function sendMessage(message: string, context: string) {
       text,
       audioUrls,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Chat error:", error);
-    return { text: `Error: ${error.message || "Something went wrong."}`, audioUrls: [] };
+    const errorMessage = error instanceof Error ? error.message : "Something went wrong.";
+    return { text: `Error: ${errorMessage}`, audioUrls: [] };
   }
 }

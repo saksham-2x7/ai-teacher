@@ -13,7 +13,7 @@ export async function generateLessonPlan(params: LessonPlanParams) {
   if (!apiKey) throw new Error('Missing Gemini API Key');
 
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: 'gemini-3.8-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-3.7-flash' });
 
   const prompt = `You are an expert AI teacher. Create a structured lesson plan for a ${params.level} student on the topic: "${params.topic || 'General Topic'}".
 The lesson should take approximately ${params.timeMinutes} minutes. The language of instruction should be ${params.language}.

@@ -7,7 +7,10 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { sendMessage } from "@/app/actions/chat";
 
+import ThreeAvatar from "@/components/ThreeAvatar";
+
 export default function LessonPage({ params }: { params: { id: string } }) {
+// ... existing states
   const [messages, setMessages] = useState<{ role: 'ai' | 'user', text: string }[]>([
     { role: 'ai', text: "Hello! I'm your AI Teacher. Are you ready to begin our lesson?" }
   ]);
@@ -68,7 +71,7 @@ export default function LessonPage({ params }: { params: { id: string } }) {
         {/* Main 3D Stage */}
         <div className="flex-1 flex flex-col relative rounded-[32px] border border-white/[0.05] bg-white/[0.01] backdrop-blur-3xl overflow-hidden shadow-2xl shadow-black/50">
           
-          <div className="absolute top-6 left-8 z-20">
+          <div className="absolute top-6 left-8 z-20 pointer-events-none">
             <h1 className="text-2xl font-semibold tracking-tight bg-gradient-to-br from-white to-white/40 bg-clip-text text-transparent">AI Educator</h1>
             <p className="text-sm text-zinc-500 font-medium tracking-wide uppercase mt-1">Live Session Active</p>
           </div>
@@ -80,14 +83,9 @@ export default function LessonPage({ params }: { params: { id: string } }) {
              </Button>
           </div>
 
-          {/* 3D Spline Canvas */}
-          <div className="flex-1 relative w-full h-full cursor-grab active:cursor-grabbing">
-            <iframe 
-              src="https://my.spline.design/aibots-5eb324a3070494fbba201e7e44a49df6/" 
-              className="w-full h-full border-0 absolute inset-0" 
-              title="3D AI Avatar"
-              allow="autoplay; fullscreen; xr-spatial-tracking"
-            />
+          {/* 3D Local Canvas */}
+          <div className="flex-1 relative w-full h-full">
+            <ThreeAvatar isSpeaking={isSpeaking} />
             
             {/* Visualizer overlay when speaking */}
             <AnimatePresence>

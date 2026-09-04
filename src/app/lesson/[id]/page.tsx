@@ -20,25 +20,50 @@ export default function LessonPage({ params }: { params: { id: string } }) {
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioQueueRef = useRef<string[]>([]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const playAudio = (url: string) => {
-    if (audioRef.current) audioRef.current.pause();
-    const audio = new Audio(url);
+  const playNextAudio = () => {
+    if (audioQueueRef.current.length === 0) {
+      setIsSpeaking(false);
+      return;
+    }
+    const nextUrl = audioQueueRef.current.shift()!;
+    const audio = new Audio(nextUrl);
     audioRef.current = audio;
+    
     audio.onplay = () => setIsSpeaking(true);
-    audio.onended = () => setIsSpeaking(false);
-    audio.onerror = () => setIsSpeaking(false);
-    audio.play().catch(e => console.error("Audio blocked:", e));
+    audio.onended = () => {
+      playNextAudio();
+    };
+    audio.onerror = () => {
+      setIsSpeaking(false);
+      audioQueueRef.current = [];
+    };
+    
+    audio.play().catch(e => {
+      console.error("Audio blocked:", e);
+      setIsSpeaking(false);
+    });
+  };
+
+  const playAudio = (urls: string[]) => {
+    if (audioRef.current) audioRef.current.pause();
+    
+    if (!urls || urls.length === 0) return;
+    
+    audioQueueRef.current = [...urls];
+    playNextAudio();
   };
 
   const stopAudio = () => {
     if (audioRef.current) {
       audioRef.current.pause();
       setIsSpeaking(false);
+      audioQueueRef.current = [];
     }
   };
 
@@ -53,8 +78,8 @@ export default function LessonPage({ params }: { params: { id: string } }) {
     setMessages(prev => [...prev, { role: 'ai', text: response.text || '' }]);
     setLoading(false);
     
-    if (response.audioUrl) {
-      playAudio(response.audioUrl);
+    if (response.audioUrls && response.audioUrls.length > 0) {
+      playAudio(response.audioUrls);
     }
   };
 

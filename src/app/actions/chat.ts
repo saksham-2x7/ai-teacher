@@ -23,19 +23,21 @@ export async function sendMessage(message: string, context: string) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 
-    // Generate Audio URL using google-tts-api
-    const audioUrl = googleTTS.getAudioUrl(text, {
+    // Generate Audio URLs using google-tts-api for long text
+    const audioResults = googleTTS.getAllAudioUrls(text, {
       lang: 'en-US',
       slow: false,
       host: 'https://translate.google.com',
     });
 
+    const audioUrls = audioResults.map(r => r.url);
+
     return {
       text,
-      audioUrl,
+      audioUrls,
     };
   } catch (error: any) {
     console.error("Chat error:", error);
-    return { text: `Error: ${error.message || "Something went wrong."}`, audioUrl: null };
+    return { text: `Error: ${error.message || "Something went wrong."}`, audioUrls: [] };
   }
 }

@@ -1,0 +1,56 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  materials     Material[]
+  lessons       Lesson[]
+  progress      Progress[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Material {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  content     String
+  type        String   // e.g., 'PDF', 'TEXT', 'TOPIC'
+  createdAt   DateTime @default(now())
+  lessons     Lesson[]
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  materialId  String?
+  material    Material? @relation(fields: [materialId], references: [id], onDelete: SetNull)
+  topic       String
+  plan        String   // Stores the structured lesson plan (JSON stringified)
+  status      String   @default("NOT_STARTED") // e.g., IN_PROGRESS, COMPLETED
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Progress {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  topic       String
+  score       Float
+  weakAreas   String
+  strongAreas String
+  createdAt   DateTime @default(now())
+}
